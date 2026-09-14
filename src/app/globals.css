@@ -1,0 +1,247 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --graphite: #0b0c0e;
+  --bone: #f4f2ed;
+  --charcoal: #14161a;
+  --warm: #edebe4;
+  --stone: #8a8d93;
+  --hairline: #2a2d33;
+  --blueprint: #1d4e89;
+  --blueprint-10: rgba(29, 78, 137, 0.1);
+  --blueprint-35: rgba(29, 78, 137, 0.35);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+html {
+  background: var(--graphite);
+  color: var(--warm);
+  scroll-behavior: auto;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--blueprint);
+  color: var(--warm);
+}
+
+@media (pointer: fine) {
+  body,
+  a,
+  button,
+  [role='button'] {
+    cursor: none;
+  }
+}
+
+/* ---------- Typography ---------- */
+.font-display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+}
+.display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+.display-md {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+.label {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-feature-settings: 'tnum' 1;
+  font-variant-numeric: tabular-nums;
+}
+.tnum {
+  font-feature-settings: 'tnum' 1;
+  font-variant-numeric: tabular-nums;
+}
+.readout {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  font-feature-settings: 'tnum' 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Surfaces ---------- */
+.glass {
+  background: rgba(244, 242, 237, 0.035);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--hairline);
+}
+.light .glass {
+  background: rgba(20, 22, 26, 0.03);
+  border-color: rgba(20, 22, 26, 0.14);
+}
+.hairline-x {
+  border-top: 1px solid var(--hairline);
+}
+.light .hairline-x {
+  border-color: rgba(20, 22, 26, 0.14);
+}
+.blueprint-grid {
+  background-image:
+    linear-gradient(to right, rgba(138, 141, 147, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(138, 141, 147, 0.09) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+.light .blueprint-grid {
+  background-image:
+    linear-gradient(to right, rgba(20, 22, 26, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 22, 26, 0.07) 1px, transparent 1px);
+}
+.grain::after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Light sections: bone background, charcoal text */
+.light {
+  background: var(--bone);
+  color: var(--charcoal);
+  color-scheme: light;
+}
+.light .text-stone {
+  color: #6b6e74;
+}
+
+/* ---------- Shimmer button (Blueprint only) ---------- */
+.shimmer {
+  --speed: 2.6s;
+  --spread: 60deg;
+  --cut: 1px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.shimmer__spark {
+  position: absolute;
+  inset: 0;
+  z-index: -30;
+  container-type: size;
+  overflow: visible;
+  filter: blur(1.5px);
+  opacity: 0;
+  transition: opacity 240ms var(--ease-cubic);
+}
+.shimmer:hover .shimmer__spark,
+.shimmer:focus-visible .shimmer__spark {
+  opacity: 1;
+}
+.shimmer__spark-inner {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: 1;
+  height: 100cqh;
+  animation: shimmer-slide var(--speed) ease-in-out infinite alternate;
+}
+.shimmer__spark-inner::before {
+  content: '';
+  position: absolute;
+  inset: -100%;
+  width: auto;
+  background: conic-gradient(
+    from calc(270deg - (var(--spread) * 0.5)),
+    transparent 0,
+    var(--blueprint) var(--spread),
+    transparent var(--spread)
+  );
+  animation: spin-around calc(var(--speed) * 2) infinite linear;
+}
+.shimmer__backdrop {
+  position: absolute;
+  inset: var(--cut);
+  z-index: -20;
+  background: var(--graphite);
+}
+.light .shimmer__backdrop {
+  background: var(--bone);
+}
+
+/* Link underline that arrives after the content (NVIDIA "edge arrives last") */
+.u-line {
+  position: relative;
+}
+.u-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 380ms var(--ease-expo);
+}
+.u-line:hover::after {
+  transform: scaleX(1);
+}
+
+/* Duotone imagery: no photo may introduce a second accent */
+.duotone img {
+  filter: grayscale(0.85) contrast(1.05) brightness(0.9);
+  transition: filter 900ms var(--ease-expo), transform 1200ms var(--ease-expo);
+}
+.duotone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 12, 14, 0.15), rgba(11, 12, 14, 0.55));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.group:hover .duotone img,
+.duotone:hover img {
+  filter: grayscale(0.6) contrast(1.05) brightness(0.95);
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
