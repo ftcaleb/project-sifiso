@@ -171,8 +171,8 @@ export type Person = {
 
 export const TEAM: Person[] = [
   {
-    slug: 'sifiso-mabaso',
-    name: 'Sifiso Mabaso',
+    slug: 'sifiso-mhlongo',
+    name: 'Sifiso Mhlongo',
     role: 'Founder & Chief Executive',
     focus: 'Asset governance · Public finance',
     bio: [

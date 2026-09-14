@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { SmoothScroll } from '@/components/providers/SmoothScroll';
-import { CustomCursor } from '@/components/providers/CustomCursor';
 import { HUD } from '@/components/layout/HUD';
 import { Footer } from '@/components/layout/Footer';
 
@@ -21,7 +20,7 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://sifisoholdings.example'),
+  metadataBase: new URL(process.env.SITE_URL ?? 'https://sifiso-holding.vercel.app'),
   title: {
     default: 'Sifiso Holdings — The Operating System for Africa’s Built Environment',
     template: '%s — Sifiso Holdings',
@@ -50,7 +49,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="top">{children}</main>
           <Footer />
         </SmoothScroll>
-        <CustomCursor />
       </body>
     </html>
   );

@@ -50,13 +50,25 @@ body {
   color: var(--warm);
 }
 
-@media (pointer: fine) {
-  body,
-  a,
-  button,
-  [role='button'] {
-    cursor: none;
-  }
+/* Scrollbar: visible but drafted — a stone thumb on a graphite track. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #5c6067 var(--graphite);
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--graphite);
+  border-left: 1px solid var(--hairline);
+}
+::-webkit-scrollbar-thumb {
+  background: #5c6067;
+  border: 2px solid var(--graphite);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--stone);
 }
 
 /* ---------- Typography ---------- */

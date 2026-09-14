@@ -9,7 +9,7 @@ Phase 0 research lives in [`research/investigation.md`](research/investigation.m
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+npm run dev -- -p 3105   # http://localhost:3105 (port 3000 is often taken)
 npm run build && npm start
 npm run typecheck
 ```
@@ -25,7 +25,7 @@ npm run typecheck
 | `/sectors` | Sector cards and track record table |
 | `/insights`, `/insights/[slug]` | Publications list and article template |
 | `/team`, `/team/[slug]` | Team grid and repeatable bio template |
-| `/contact` | Form (simulated submit), offices, plotted office map |
+| `/contact` | Form (Nodemailer via `/api/contact`), offices, plotted office map |
 
 ## Design system (enforced in `tailwind.config.ts` and `globals.css`)
 
@@ -35,7 +35,7 @@ Everything else is `graphite #0B0C0E`, `bone #F4F2ED`, `charcoal #14161A`, `warm
 
 Type: Space Grotesk 300/400/500 for display and for all uppercase labels/readouts (with tabular figures), Inter 400/500 for body.
 
-Motion rules (from the investigation): reveals use expo-out `cubic-bezier(0.19,1,0.22,1)` or cubic-out; springs are used **only** for cursor-following (custom cursor, magnetic buttons, card spotlight, 3D parallax). Everything respects `prefers-reduced-motion`.
+Motion rules (from the investigation): reveals use expo-out `cubic-bezier(0.19,1,0.22,1)` or cubic-out; springs are used **only** for cursor-following (magnetic buttons, card spotlight, 3D parallax). Everything respects `prefers-reduced-motion`.
 
 ## The 3D hero
 
@@ -47,9 +47,14 @@ With no scene URL, `Hero3D.tsx` renders a procedural spatial grid / city model i
 
 No local assets. All photos are Unsplash (free commercial use) referenced in `src/lib/images.ts`; every ID was verified live. Photos always render through the `Duotone` component (desaturated + graphite multiply) so no photograph can introduce a second accent.
 
+## Contact form email
+
+`ContactForm.tsx` posts to `src/app/api/contact/route.ts`, which sends two emails with Nodemailer over SMTP: an internal notification to `MAIL_TO` (reply-to set to the enquirer) and an auto-reply to the enquirer (reply-to `MAIL_REPLY_TO`). Templates live in `src/lib/mail.ts`. Protection: hidden honeypot field (bots get a fake success), server-side validation, and an in-memory rate limit of 5 submissions per IP per 10 minutes (per server instance; use an edge rate limiter on serverless hosts if abuse appears).
+
+Set these in `.env.local` (see `.env.example`): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `MAIL_TO`, `MAIL_REPLY_TO`, `SITE_URL`. Gmail needs an App Password with 2FA enabled. On Vercel, add the same variables in Project Settings → Environment Variables.
+
 ## Not wired
 
-- The contact form simulates submission; connect `ContactForm.tsx` to your email/CRM endpoint.
 - Stats, track record, team and insights are placeholder content in `src/lib/data.ts`.
 
 ## Implementation notes

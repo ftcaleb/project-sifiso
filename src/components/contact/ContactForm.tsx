@@ -11,17 +11,35 @@ const SECTORS = ['Municipal', 'Provincial / National', 'Bank / DFI', 'Property f
 /**
  * Palantir-style inputs: transparent, bottom-border only. Focus brightens the
  * rule to warm; Blueprint is reserved for the submit button in this viewport.
- * Submission is simulated (no backend is wired) — see README.
+ * Posts to /api/contact (Nodemailer over SMTP) with a honeypot field.
  */
 export function ContactForm() {
   const params = useSearchParams();
   const subject = params.get('subject') ?? '';
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [ref, setRef] = useState('');
+  const [error, setError] = useState('');
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError('');
     setState('sending');
-    setTimeout(() => setState('sent'), 900);
+    const fd = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(fd.entries());
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json()) as { ok: boolean; ref?: string; error?: string };
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Send failed.');
+      setRef(data.ref ?? '');
+      setState('sent');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'We could not send your message.');
+      setState('idle');
+    }
   };
 
   const field = 'peer w-full border-0 border-b border-hairline bg-transparent px-0 py-3 text-base text-warm outline-none transition-colors duration-240 focus:border-warm placeholder:text-stone/50';
@@ -37,27 +55,34 @@ export function ContactForm() {
               Received
             </div>
             <p className="display-md mt-4 text-2xl">Thank you. A practice lead will respond within one working day.</p>
-            <p className="mt-4 text-sm text-stone">Reference SH-{new Date().getFullYear()}-{String(Math.floor(Math.random() * 9000) + 1000)}</p>
+            <p className="mt-4 text-sm text-stone">
+              Reference {ref}. A copy has been sent to your email address.
+            </p>
           </motion.div>
         ) : (
-          <motion.form key="form" onSubmit={onSubmit} exit={{ opacity: 0 }} className="grid gap-8 sm:grid-cols-2">
+          <motion.form key="form" onSubmit={onSubmit} exit={{ opacity: 0 }} className="grid gap-8 sm:grid-cols-2" noValidate>
+            {/* Honeypot — hidden from humans, filled by bots */}
+            <div className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden" aria-hidden>
+              <label htmlFor="website">Website</label>
+              <input id="website" name="website" tabIndex={-1} autoComplete="off" />
+            </div>
             <div>
               <label htmlFor="name" className={label}>
                 Name
               </label>
-              <input id="name" name="name" required className={field} placeholder="Full name" />
+              <input id="name" name="name" required className={field} placeholder="Full name" autoComplete="name" />
             </div>
             <div>
               <label htmlFor="org" className={label}>
                 Organisation
               </label>
-              <input id="org" name="org" required className={field} placeholder="Institution or company" />
+              <input id="org" name="org" required className={field} placeholder="Institution or company" autoComplete="organization" />
             </div>
             <div>
               <label htmlFor="email" className={label}>
                 Email
               </label>
-              <input id="email" name="email" type="email" required className={field} placeholder="name@organisation.gov.za" />
+              <input id="email" name="email" type="email" required className={field} placeholder="name@organisation.gov.za" autoComplete="email" />
             </div>
             <div>
               <label htmlFor="sector" className={label}>
@@ -86,8 +111,8 @@ export function ContactForm() {
               </label>
               <textarea id="message" name="message" rows={4} required className={`${field} resize-none`} placeholder="Registers, rolls, frameworks, data — tell us where it stands." />
             </div>
-            <div className="sm:col-span-2 flex items-center justify-between gap-6">
-              <span className="label text-stone/70">POPIA · we only use this to reply</span>
+            <div className="sm:col-span-2 flex flex-wrap items-center justify-between gap-6">
+              <span className="label text-stone/70">{error ? <span className="text-warm">{error}</span> : 'POPIA · we only use this to reply'}</span>
               <Button type="submit" variant="primary" magnetic={false}>
                 {state === 'sending' ? 'Sending' : 'Send'}
               </Button>
