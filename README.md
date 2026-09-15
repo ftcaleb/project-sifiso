@@ -25,7 +25,7 @@ npm run typecheck
 | `/sectors` | Sector cards and track record table |
 | `/insights`, `/insights/[slug]` | Publications list and article template |
 | `/team`, `/team/[slug]` | Team grid and repeatable bio template |
-| `/contact` | Form (Nodemailer via `/api/contact`), offices, plotted office map |
+| `/contact` | Form (Nodemailer via `/api/contact`), offices, plotted office map, self-service QR generator |
 
 ## Design system (enforced in `tailwind.config.ts` and `globals.css`)
 
@@ -52,6 +52,10 @@ No local assets. All photos are Unsplash (free commercial use) referenced in `sr
 `ContactForm.tsx` posts to `src/app/api/contact/route.ts`, which sends two emails with Nodemailer over SMTP: an internal notification to `MAIL_TO` (reply-to set to the enquirer) and an auto-reply to the enquirer (reply-to `MAIL_REPLY_TO`). Templates live in `src/lib/mail.ts`. Protection: hidden honeypot field (bots get a fake success), server-side validation, and an in-memory rate limit of 5 submissions per IP per 10 minutes (per server instance; use an edge rate limiter on serverless hosts if abuse appears).
 
 Set these in `.env.local` (see `.env.example`): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `MAIL_TO`, `MAIL_REPLY_TO`, `SITE_URL`. Gmail needs an App Password with 2FA enabled. On Vercel, add the same variables in Project Settings → Environment Variables.
+
+## QR codes
+
+The contact page has a browser-side generator (`QRGenerator.tsx`, using the `qrcode` package): pick a site page or paste any link, preview updates instantly, download PNG (1024px) or SVG. It encodes the domain the site is served from, so it follows a custom domain automatically. `npm run qr` also writes static codes for the home and contact pages to `public/qr/` for print.
 
 ## Not wired
 

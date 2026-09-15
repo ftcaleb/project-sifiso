@@ -5,7 +5,7 @@ import { IMG } from '@/lib/images';
 import { PageHero } from '@/components/ui/PageHero';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { OfficeMap } from '@/components/contact/OfficeMap';
-import { ScanCodes } from '@/components/contact/ScanCodes';
+import { QRGenerator } from '@/components/contact/QRGenerator';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { DrawLine, Reveal } from '@/components/ui/Reveal';
 import { Duotone } from '@/components/ui/Duotone';
@@ -75,7 +75,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <ScanCodes />
+      <QRGenerator />
     </>
   );
 }
