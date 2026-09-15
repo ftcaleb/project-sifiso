@@ -14,13 +14,15 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const p = TEAM.find((x) => x.slug === params.slug);
+  const { slug } = params;
+  const p = TEAM.find((x) => x.slug === slug);
   return { title: p ? `${p.name} — ${p.role}` : 'Team', description: p?.bio[0] };
 }
 
 /** Repeatable bio template. */
 export default function PersonPage({ params }: { params: { slug: string } }) {
-  const idx = TEAM.findIndex((x) => x.slug === params.slug);
+  const { slug } = params;
+  const idx = TEAM.findIndex((x) => x.slug === slug);
   if (idx < 0) notFound();
   const p = TEAM[idx];
   const next = TEAM[(idx + 1) % TEAM.length];

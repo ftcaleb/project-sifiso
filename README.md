@@ -9,10 +9,13 @@ Phase 0 research lives in [`research/investigation.md`](research/investigation.m
 
 ```bash
 npm install
-npm run dev -- -p 3105   # http://localhost:3105 (port 3000 is often taken)
-npm run build && npm start
+npm run dev -- -p 3105   # Next dev server (port 3000 is often taken)
+npm run preview          # static build + Cloudflare Pages runtime, incl. /api/contact
+npm run deploy           # build and publish to Cloudflare Pages
 npm run typecheck
 ```
+
+`npm run dev` does not run the enquiry form: that lives in a Cloudflare Pages Function, so use `npm run preview` (http://localhost:8788) to exercise it locally. Local Function secrets go in `.dev.vars`, which is git-ignored.
 
 ## Routes
 
@@ -47,11 +50,29 @@ With no scene URL, `Hero3D.tsx` renders a procedural spatial grid / city model i
 
 No local assets. All photos are Unsplash (free commercial use) referenced in `src/lib/images.ts`; every ID was verified live. Photos always render through the `Duotone` component (desaturated + graphite multiply) so no photograph can introduce a second accent.
 
+## Hosting
+
+The site is a **static export** (`output: 'export'`) served from Cloudflare Pages, plus one Pages Function for the enquiry form. Nothing needs a Node server, so hosting is on Cloudflare's free tier.
+
+- `out/` — the built site, published with `wrangler pages deploy`.
+- `functions/api/contact.ts` — the only server-side code. Cloudflare routes `POST /api/contact` to it automatically by file path.
+
 ## Contact form email
 
-`ContactForm.tsx` posts to `src/app/api/contact/route.ts`, which sends two emails with Nodemailer over SMTP: an internal notification to `MAIL_TO` (reply-to set to the enquirer) and an auto-reply to the enquirer (reply-to `MAIL_REPLY_TO`). Templates live in `src/lib/mail.ts`. Protection: hidden honeypot field (bots get a fake success), server-side validation, and an in-memory rate limit of 5 submissions per IP per 10 minutes (per server instance; use an edge rate limiter on serverless hosts if abuse appears).
+`ContactForm.tsx` posts to `/api/contact`, handled by the Pages Function, which sends two emails through **Resend's HTTP API** (not SMTP — Cloudflare Workers cannot open SMTP sockets): an internal notification to `MAIL_TO` with reply-to set to the enquirer, and an auto-reply to the enquirer. Templates live in `src/lib/mail.ts`. If the auto-reply fails the enquiry still succeeds, since the notification is what matters.
 
-Set these in `.env.local` (see `.env.example`): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `MAIL_TO`, `MAIL_REPLY_TO`, `SITE_URL`. Gmail needs an App Password with 2FA enabled. On Vercel, add the same variables in Project Settings → Environment Variables.
+Protection: hidden honeypot field (bots get a fake success), server-side validation, and a rate limit of 5 submissions per IP per 10 minutes.
+
+Environment variables, set in the Cloudflare Pages project (and in `.dev.vars` locally):
+
+| Variable | Notes |
+|---|---|
+| `RESEND_API_KEY` | Secret. From resend.com. |
+| `MAIL_FROM` | Must be `onboarding@resend.dev` until a domain is verified in Resend. |
+| `MAIL_TO` | Where enquiries land. |
+| `MAIL_REPLY_TO` | Reply-to on the auto-reply. |
+
+Before launch, verify the client's domain in Resend and change `MAIL_FROM` to an address on it. Until then Resend only delivers to the account owner's own address.
 
 ## QR codes
 
@@ -67,4 +88,6 @@ The contact page has a browser-side generator (`QRGenerator.tsx`, using the `qrc
 - **Shimmer button.** `container-type: size` lives on the spark layer (absolutely positioned, so it has a definite size), not on the button; on the button it collapses the button's width.
 - **Corner earmarks.** `SectionFrame` insets its labels below the fixed HUD band so section metadata never collides with the wordmark or nav.
 - **Spline package.** `@splinetool/react-spline` 3.x/4.x publish ESM-only export maps that Next 14's server resolver rejects; 2.2.6 (CJS + ESM) is pinned.
-- **Verification.** Every route was built (`next build`, 26 static pages) and screenshotted at 1440×900 and 400×860 with Playwright over Edge, including scrolled sections, before hand-off.
+- **Static export constraints.** Next's image optimiser and runtime `ImageResponse` do not exist on a static host, so `images.unoptimized` is on and the social card and Apple icon are pre-rendered PNGs in `src/app/` rather than generated per request.
+- **Why not OpenNext/Workers.** `@opennextjs/cloudflare` needs Next ≥ 15.5, and that upgrade chain (React 19 → `@react-three/fiber` 9) breaks peer resolution on this tree. Static export avoids the upgrade entirely and every page here is prerendered anyway.
+- **Verification.** Every route was built and screenshotted at 1440×900 and 400×860 with Playwright over Edge, including scrolled sections; the Cloudflare build was then re-verified end to end through `wrangler pages dev`.

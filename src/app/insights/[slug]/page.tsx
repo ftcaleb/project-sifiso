@@ -42,12 +42,14 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const a = INSIGHTS.find((x) => x.slug === params.slug);
+  const { slug } = params;
+  const a = INSIGHTS.find((x) => x.slug === slug);
   return { title: a?.title ?? 'Insight', description: a?.excerpt };
 }
 
 export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const a = INSIGHTS.find((x) => x.slug === params.slug);
+  const { slug } = params;
+  const a = INSIGHTS.find((x) => x.slug === slug);
   if (!a) notFound();
   const body = BODY[a.slug] ?? [a.excerpt];
   const others = INSIGHTS.filter((x) => x.slug !== a.slug).slice(0, 3);
