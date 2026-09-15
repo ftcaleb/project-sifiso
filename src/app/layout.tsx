@@ -20,7 +20,7 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.SITE_URL ?? 'https://sifiso-holding.vercel.app'),
+  metadataBase: new URL(process.env.SITE_URL ?? 'https://sifiso-holdings-enh.pages.dev'),
   title: {
     default: 'Sifiso Holdings — The Operating System for Africa’s Built Environment',
     template: '%s — Sifiso Holdings',
