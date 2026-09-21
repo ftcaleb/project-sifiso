@@ -28,7 +28,7 @@ npm run typecheck
 | `/sectors` | Sector cards and track record table |
 | `/insights`, `/insights/[slug]` | Publications list and article template |
 | `/team`, `/team/[slug]` | Team grid and repeatable bio template |
-| `/contact` | Form (Nodemailer via `/api/contact`), offices, plotted office map, self-service QR generator |
+| `/contact` | Enquiry form (`/api/contact`), offices, plotted office map, self-service QR generator |
 
 ## Design system (enforced in `tailwind.config.ts` and `globals.css`)
 
@@ -55,7 +55,10 @@ No local assets. All photos are Unsplash (free commercial use) referenced in `sr
 The site is a **static export** (`output: 'export'`) served from Cloudflare Pages, plus one Pages Function for the enquiry form. Nothing needs a Node server, so hosting is on Cloudflare's free tier.
 
 - `out/` — the built site, published with `wrangler pages deploy`.
-- `functions/api/contact.ts` — the only server-side code. Cloudflare routes `POST /api/contact` to it automatically by file path.
+- `functions/` — the only server-side code. Cloudflare routes by file path: `contact.ts` handles the enquiry form, `document.ts` emails the capability statements.
+
+
+> **Testing the forms locally.** `next dev` does not run the Cloudflare Pages Functions in `/functions`, so `POST /api/*` falls through to Next's 404 HTML page. Use `npm run preview` (http://localhost:8788) for anything that submits a form. The client helper in `src/lib/post-json.ts` detects the HTML response and shows a readable message instead of a JSON parse error.
 
 ## Contact form email
 
@@ -77,6 +80,10 @@ Before launch, verify the client's domain in Resend and change `MAIL_FROM` to an
 ## QR codes
 
 The contact page has a browser-side generator (`QRGenerator.tsx`, using the `qrcode` package): pick a site page or paste any link, preview updates instantly, download PNG (1024px) or SVG. It encodes the domain the site is served from, so it follows a custom domain automatically. `npm run qr` also writes static codes for the home and contact pages to `public/qr/` for print.
+
+## Capability statements
+
+Each service pillar offers a one-page PDF from `public/documents/`. The download is not gated: clicking starts it immediately, then a panel offers to email all four. `functions/api/document.ts` sends the visitor one email covering every pillar with a download link each, and notifies `MAIL_TO` who took what. Link URLs are built from the request origin, so they follow the site onto a custom domain.
 
 ## Not wired
 

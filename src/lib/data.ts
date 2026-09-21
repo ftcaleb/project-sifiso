@@ -48,16 +48,21 @@ export const QUADRANTS = [
   },
 ];
 
+/** A capability line on a service page. `detail` expands on hover, focus or tap. */
+export type Capability = { title: string; detail: string };
+
 export type Service = {
   id: string;
   index: string;
   title: string;
   short: string;
   summary: string;
-  capabilities: string[];
+  capabilities: Capability[];
   standards: string[];
   image: string;
   imageAlt: string;
+  /** Capability statement served from /public/documents. */
+  doc: { file: string; meta: string; blurb: string };
 };
 
 export const SERVICES: Service[] = [
@@ -69,16 +74,46 @@ export const SERVICES: Service[] = [
     summary:
       'We build and maintain the asset registers that municipalities, utilities and state-owned entities are audited against. Every component is located, conditioned, valued and scheduled — and every number can be traced back to a survey, a drawing or a transaction.',
     capabilities: [
-      'Componentised asset registers (GRAP 17 / GRAP 103)',
-      'Condition assessment and remaining-useful-life modelling',
-      'Lifecycle and renewal planning aligned to ISO 55000',
-      'mSCOA-classified capital and maintenance budgets',
-      'Audit support and AGSA finding remediation',
-      'Asset management plans, policies and strategies',
+      {
+        title: 'Componentised asset registers (GRAP 17 / GRAP 103)',
+        detail:
+          'A pipeline is not one line in the register. It is its pipe, valves, meters and chambers, each carrying its own cost, condition and useful life.',
+      },
+      {
+        title: 'Condition assessment and remaining-useful-life modelling',
+        detail:
+          'Field teams grade every component against a defined scale, and remaining useful life is recalculated from that grade rather than from age alone.',
+      },
+      {
+        title: 'Lifecycle and renewal planning aligned to ISO 55000',
+        detail:
+          'A twenty-year renewal profile showing what must be replaced, when, and what it costs to defer — built from the register, not assumed.',
+      },
+      {
+        title: 'mSCOA-classified capital and maintenance budgets',
+        detail:
+          'Every component maps to its mSCOA segments, so the capital budget and the renewal plan reconcile without a spreadsheet in between.',
+      },
+      {
+        title: 'Audit support and AGSA finding remediation',
+        detail:
+          'We stand behind the register during the audit, answer sampling queries with source documents, and close prior-year findings line by line.',
+      },
+      {
+        title: 'Asset management plans, policies and strategies',
+        detail:
+          'The governance documents council adopts: the policy, the strategy and the asset management plan the register is built to serve.',
+      },
     ],
     standards: ['GRAP 17', 'GRAP 103', 'mSCOA', 'ISO 55000', 'IIMM'],
     image: IMG.siteAerial,
     imageAlt: 'Aerial view of an infrastructure construction site',
+    doc: {
+      file: 'asset-management.pdf',
+      meta: 'PDF · 1 page',
+      blurb:
+        'How we build registers that survive an audit: componentisation, condition grading and a twenty-year renewal profile aligned to GRAP 17 and ISO 55000.',
+    },
   },
   {
     id: 'spatial-planning',
@@ -88,16 +123,46 @@ export const SERVICES: Service[] = [
     summary:
       'Spatial decisions outlive the people who make them. We author the frameworks, schemes and datasets that govern where a city grows — and we make them queryable, so a planning decision is an analysis, not an opinion.',
     capabilities: [
-      'Municipal and regional Spatial Development Frameworks',
-      'Land Use Schemes and SPLUMA compliance',
-      'Cadastral, zoning and servitude data engineering',
-      'Drone and satellite survey integration',
-      'Growth, densification and infrastructure demand modelling',
-      'Enterprise GIS architecture and data governance',
+      {
+        title: 'Municipal and regional Spatial Development Frameworks',
+        detail:
+          'The statutory framework directing where growth is permitted, drafted with the spatial analysis and public participation record needed to defend it.',
+      },
+      {
+        title: 'Land Use Schemes and SPLUMA compliance',
+        detail:
+          'A single wall-to-wall scheme with zoning, controls and a register an official can query rather than interpret.',
+      },
+      {
+        title: 'Cadastral, zoning and servitude data engineering',
+        detail:
+          'Surveyor-General data, township registers and servitudes reconciled into one clean layer, with documented lineage on every parcel.',
+      },
+      {
+        title: 'Drone and satellite survey integration',
+        detail:
+          'Aerial and satellite capture georeferenced and tied to the cadastre, so imagery becomes evidence rather than a backdrop.',
+      },
+      {
+        title: 'Growth, densification and infrastructure demand modelling',
+        detail:
+          'Where the population goes, what it will need, and whether the bulk services can carry it — modelled by scenario, not by assertion.',
+      },
+      {
+        title: 'Enterprise GIS architecture and data governance',
+        detail:
+          'The platform, standards and stewardship roles that keep spatial data accurate long after the consultants leave.',
+      },
     ],
     standards: ['SPLUMA', 'SANS 1878', 'ISO 19115', 'OGC'],
     image: IMG.coastalAerial,
     imageAlt: 'Aerial view of a planned coastal development',
+    doc: {
+      file: 'spatial-planning.pdf',
+      meta: 'PDF · 1 page',
+      blurb:
+        'Frameworks, schemes and cadastral data engineered so a planning decision can be queried and defended rather than argued.',
+    },
   },
   {
     id: 'valuations',
@@ -107,16 +172,46 @@ export const SERVICES: Service[] = [
     summary:
       'From a general valuation roll of a million parcels to a single-asset opinion for a lender, our valuations are mass-appraisal grade: statistically defensible, spatially indexed and reproducible on demand.',
     capabilities: [
-      'General and supplementary valuation rolls (MPRA)',
-      'Mass appraisal modelling and ratio studies',
-      'Mortgage, portfolio and impairment valuations for lenders',
-      'Insurance replacement-cost and depreciated-cost valuations',
-      'Objections, appeals and Valuation Appeal Board support',
-      'Plant, equipment and infrastructure asset valuation',
+      {
+        title: 'General and supplementary valuation rolls (MPRA)',
+        detail:
+          'Full and supplementary rolls prepared, certified and defended, from data collection through to public inspection.',
+      },
+      {
+        title: 'Mass appraisal modelling and ratio studies',
+        detail:
+          'Statistical models calibrated against arm’s-length sales, with ratio studies reported on median, coefficient of dispersion and price-related differential.',
+      },
+      {
+        title: 'Mortgage, portfolio and impairment valuations for lenders',
+        detail:
+          'Origination and portfolio valuations delivered at volume, with spatial risk overlays and one consistent methodology across the book.',
+      },
+      {
+        title: 'Insurance replacement-cost and depreciated-cost valuations',
+        detail:
+          'Reinstatement and depreciated replacement cost for insurers and for financial reporting, built up from measured quantities.',
+      },
+      {
+        title: 'Objections, appeals and Valuation Appeal Board support',
+        detail:
+          'When a value is challenged we prepare the evidence, brief the valuer and appear before the board.',
+      },
+      {
+        title: 'Plant, equipment and infrastructure asset valuation',
+        detail:
+          'Specialised and non-market assets valued on a cost approach that survives both the audit and the negotiation.',
+      },
     ],
     standards: ['MPRA', 'IVS', 'IFRS 13', 'SAIV', 'RICS'],
     image: IMG.towersUp,
     imageAlt: 'Glass office towers viewed from street level',
+    doc: {
+      file: 'valuations.pdf',
+      meta: 'PDF · 1 page',
+      blurb:
+        'Mass-appraisal method, ratio-study reporting and the work it supports, from a single lender opinion to a million-parcel roll.',
+    },
   },
   {
     id: 'data-analytics',
@@ -126,16 +221,46 @@ export const SERVICES: Service[] = [
     summary:
       'Every service we deliver produces structured, spatial, time-stamped data. Our analytics practice turns that exhaust into the models, dashboards and APIs that power MERIDIAN™ — and into institutional memory for our clients.',
     capabilities: [
-      'Spatial data warehouses and master data management',
-      'Predictive deterioration and demand models',
-      'Executive dashboards and regulatory reporting automation',
-      'Integration with ERP, GIS and financial systems',
-      'Data quality frameworks and stewardship programmes',
-      'Custom platform development on the MERIDIAN™ core',
+      {
+        title: 'Spatial data warehouses and master data management',
+        detail:
+          'One versioned store where register, cadastre and financial data share keys, so the same asset means the same thing everywhere.',
+      },
+      {
+        title: 'Predictive deterioration and demand models',
+        detail:
+          'Condition curves fitted to your own inspection history, so the renewal forecast improves every time a team goes into the field.',
+      },
+      {
+        title: 'Executive dashboards and regulatory reporting automation',
+        detail:
+          'Monthly and statutory packs generated from the data, rather than assembled by hand the week before they are due.',
+      },
+      {
+        title: 'Integration with ERP, GIS and financial systems',
+        detail:
+          'Connectors to SAP, Oracle, Sage and Esri that keep the register and the ledger in step without duplicate capture.',
+      },
+      {
+        title: 'Data quality frameworks and stewardship programmes',
+        detail:
+          'Defined rules, named owners and exception reports, so data quality is a standing measure rather than a project.',
+      },
+      {
+        title: 'Custom platform development on the MERIDIAN™ core',
+        detail:
+          'Where a client needs something the platform does not do yet, we build it on the same core rather than beside it.',
+      },
     ],
     standards: ['ISO 8000', 'POPIA', 'ISO 27001', 'OGC API'],
     image: IMG.dashboardScreen,
     imageAlt: 'Analytics dashboard on a large display',
+    doc: {
+      file: 'data-analytics.pdf',
+      meta: 'PDF · 1 page',
+      blurb:
+        'The data layer beneath everything else: warehouses, deterioration models, system integrations and the reporting that runs off them.',
+    },
   },
 ];
 

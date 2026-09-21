@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
+import { postJson } from '@/lib/post-json';
 import { EASE_CUBIC } from '@/lib/utils';
 
 const SECTORS = ['Municipal', 'Provincial / National', 'Bank / DFI', 'Property fund', 'Utility / SOE', 'Mining / Energy', 'Other'];
@@ -27,13 +28,7 @@ export function ContactForm() {
     const fd = new FormData(e.currentTarget);
     const payload = Object.fromEntries(fd.entries());
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const data = (await res.json()) as { ok: boolean; ref?: string; error?: string };
-      if (!res.ok || !data.ok) throw new Error(data.error || 'Send failed.');
+      const data = await postJson<{ ok: boolean; ref?: string }>('/api/contact', payload);
       setRef(data.ref ?? '');
       setState('sent');
     } catch (err) {

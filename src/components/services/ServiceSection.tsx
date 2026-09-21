@@ -1,33 +1,24 @@
 import type { Service } from '@/lib/data';
+import { CapabilityList } from '@/components/services/CapabilityList';
+import { DocumentDownload } from '@/components/services/DocumentDownload';
 import { Duotone } from '@/components/ui/Duotone';
 import { Eyebrow } from '@/components/ui/Eyebrow';
-import { DrawLine, Reveal } from '@/components/ui/Reveal';
+import { Reveal } from '@/components/ui/Reveal';
 import { SplitText } from '@/components/ui/SplitText';
 import { Button } from '@/components/ui/Button';
 
 export function ServiceSection({ s, flip = false }: { s: Service; flip?: boolean }) {
   return (
-    <section id={s.id} className="relative scroll-mt-24 bg-graphite py-24 md:py-36" data-section={s.title}>
+    <section id={s.id} className="relative scroll-mt-24 bg-graphite py-20 md:py-36" data-section={s.title}>
       <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-12 md:gap-10 md:px-10">
         <div className={`md:col-span-6 ${flip ? 'md:order-2' : ''}`}>
           <Eyebrow index={s.index}>{s.short}</Eyebrow>
-          <SplitText as="h2" text={s.title} className="display mt-6 text-[clamp(2.4rem,5.5vw,4.75rem)]" />
+          <SplitText as="h2" text={s.title} className="display mt-6 text-[clamp(2rem,5.5vw,4.75rem)]" />
           <Reveal delay={0.3} className="mt-8 max-w-xl text-base leading-relaxed text-stone md:text-lg">
             {s.summary}
           </Reveal>
 
-          <ul className="mt-12">
-            {s.capabilities.map((c, i) => (
-              <li key={c}>
-                <DrawLine delay={0.1 + i * 0.06} />
-                <Reveal delay={0.15 + i * 0.06} y={12} className="flex items-baseline gap-5 py-3.5 text-sm text-warm/85 md:text-[0.95rem]">
-                  <span className="label w-6 shrink-0 text-stone">{String(i + 1).padStart(2, '0')}</span>
-                  {c}
-                </Reveal>
-              </li>
-            ))}
-            <DrawLine delay={0.5} />
-          </ul>
+          <CapabilityList items={s.capabilities} />
 
           <Reveal delay={0.5} className="mt-8 flex flex-wrap gap-2">
             {s.standards.map((st) => (
@@ -37,9 +28,13 @@ export function ServiceSection({ s, flip = false }: { s: Service; flip?: boolean
             ))}
           </Reveal>
 
+          <Reveal delay={0.55} y={20}>
+            <DocumentDownload service={s} />
+          </Reveal>
+
           <Reveal delay={0.6} className="mt-10">
             <Button href="/contact" variant="ghost">
-              Discuss {s.title.toLowerCase()}
+              Discuss this service
             </Button>
           </Reveal>
         </div>
