@@ -16,12 +16,12 @@ export function SpatialOverlay() {
     }
   }
   return (
-    <section className="relative overflow-hidden border-t border-hairline bg-graphite py-28 md:py-40" data-section="Spatial layer">
+    <section className="relative overflow-hidden border-t border-hairline bg-graphite py-20 md:py-40" data-section="Spatial layer">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <div className="grid gap-10 md:grid-cols-12 md:items-end">
           <div className="md:col-span-7">
             <Eyebrow index="03">Spatial layer</Eyebrow>
-            <SplitText as="h2" text="Every layer. One coordinate system." className="display mt-6 text-[clamp(2.5rem,6vw,5.5rem)]" />
+            <SplitText as="h2" text="Every layer. One coordinate system." className="display mt-6 text-[clamp(2.1rem,6vw,5.5rem)]" />
           </div>
           <Reveal className="md:col-span-5 md:pb-2" delay={0.3}>
             <p className="text-base leading-relaxed text-stone">

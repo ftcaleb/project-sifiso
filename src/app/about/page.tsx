@@ -53,10 +53,10 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="relative border-t border-hairline bg-graphite py-28 md:py-40" data-section="Values">
+      <section className="relative border-t border-hairline bg-graphite py-20 md:py-40" data-section="Values">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <Eyebrow index="02">Values</Eyebrow>
-          <SplitText as="h2" text="Four rules we do not bend." className="display mt-6 text-[clamp(2.5rem,6vw,5.5rem)]" />
+          <SplitText as="h2" text="Four rules we do not bend." className="display mt-6 text-[clamp(2.1rem,6vw,5.5rem)]" />
           <ul className="mt-16 grid gap-x-10 md:grid-cols-2">
             {VALUES.map((v, i) => (
               <li key={v.index}>
@@ -76,7 +76,7 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline */}
-      <section className="relative border-t border-hairline bg-graphite py-28 md:py-40" data-section="Timeline">
+      <section className="relative border-t border-hairline bg-graphite py-20 md:py-40" data-section="Timeline">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <Eyebrow index="03">Timeline</Eyebrow>
           <div className="mt-12 grid gap-12 md:grid-cols-12">
@@ -100,15 +100,15 @@ export default function AboutPage() {
       </section>
 
       {/* Leadership */}
-      <section className="relative border-t border-hairline bg-graphite py-28 md:py-40" data-section="Leadership">
+      <section className="relative border-t border-hairline bg-graphite py-20 md:py-40" data-section="Leadership">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
               <Eyebrow index="04">Leadership</Eyebrow>
-              <SplitText as="h2" text="The people who sign the reports." className="display mt-6 text-[clamp(2.5rem,6vw,5.5rem)]" />
+              <SplitText as="h2" text="The people who sign the reports." className="display mt-6 text-[clamp(2.1rem,6vw,5.5rem)]" />
             </div>
             <Reveal delay={0.3}>
-              <Link href="/team" className="label u-line text-warm/80">
+              <Link href="/team" className="label u-line inline-flex min-h-11 items-center text-warm/80 md:min-h-0">
                 Full team
               </Link>
             </Reveal>

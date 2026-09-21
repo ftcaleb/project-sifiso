@@ -60,16 +60,24 @@ export function HUD() {
       {/* Persistent corners */}
       <div className="pointer-events-none fixed inset-0 z-[60] mix-blend-difference text-warm">
         {/* TL — wordmark */}
-        <Link href="/" className="pointer-events-auto absolute left-6 top-6 flex items-baseline gap-2 md:left-10 md:top-8" aria-label="Sifiso Holdings home">
+        <Link
+          href="/"
+          className="pointer-events-auto absolute left-4 top-3 flex min-h-11 items-center gap-2 px-2 py-2 md:left-8 md:top-6"
+          aria-label="Sifiso Holdings home"
+        >
           <span className="font-display text-lg font-medium tracking-tight">SIFISO</span>
           <span className="label opacity-70">Holdings</span>
         </Link>
 
         {/* TR — primary nav + index */}
-        <div className="pointer-events-auto absolute right-6 top-6 flex items-center gap-7 md:right-10 md:top-8">
+        <div className="pointer-events-auto absolute right-4 top-3 flex items-center gap-7 md:right-8 md:top-6">
           <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
             {NAV.map((n) => (
-              <Link key={n.href} href={n.href} className={cn('label u-line opacity-80 hover:opacity-100', isActive(n.href) && 'opacity-100')}>
+              <Link
+                key={n.href}
+                href={n.href}
+                className={cn('label u-line py-2 opacity-80 hover:opacity-100', isActive(n.href) && 'opacity-100')}
+              >
                 {n.label}
               </Link>
             ))}
@@ -77,7 +85,7 @@ export function HUD() {
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
-            className="label flex items-center gap-3"
+            className="label flex min-h-11 items-center gap-3 px-2 py-2"
             aria-expanded={open}
             aria-controls="hud-index"
           >
@@ -101,8 +109,17 @@ export function HUD() {
           </div>
         </div>
 
+        {/* Phones: the corner readouts would sit on top of real content, so
+            scroll progress becomes a hairline along the top edge instead. */}
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-warm/15 md:hidden">
+          <span
+            className="block h-full bg-warm transition-[width] duration-240 ease-std"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
         {/* BR — status */}
-        <div className="pointer-events-auto absolute bottom-6 right-6 flex items-center gap-4 md:bottom-8 md:right-10">
+        <div className="pointer-events-none absolute bottom-6 right-6 hidden items-center gap-4 md:flex md:bottom-8 md:right-10">
           <span className="label opacity-70">
             SCR {pad(progress, 3)}
           </span>
@@ -127,7 +144,7 @@ export function HUD() {
             exit={{ clipPath: 'inset(0 0 100% 0)' }}
             transition={{ duration: 0.7, ease: EASE_EXPO }}
           >
-            <div className="blueprint-grid absolute inset-0 opacity-50" />
+            <div className="blueprint-grid pointer-events-none absolute inset-0 opacity-50" />
             {/* crosshair dividers */}
             <div className="pointer-events-none absolute inset-0 hidden lg:block">
               <div className="absolute left-1/2 top-0 h-full w-px bg-hairline" />
@@ -139,7 +156,7 @@ export function HUD() {
 
             <div className="relative grid h-full grid-cols-1 overflow-y-auto pt-24 pb-24 lg:grid-cols-2 lg:grid-rows-2 lg:overflow-hidden lg:pt-0 lg:pb-0" data-lenis-prevent>
               {QUADRANTS.map((q, qi) => (
-                <div key={q.index} className="flex flex-col justify-end px-6 py-8 md:px-10 lg:px-16 lg:py-16">
+                <div key={q.index} className="flex flex-col justify-start px-6 py-7 md:px-10 lg:justify-end lg:px-16 lg:py-16">
                   <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -163,7 +180,7 @@ export function HUD() {
                             <Link
                               href={l.href}
                               className={cn(
-                                'group flex items-center gap-4 py-1 font-display text-2xl font-light tracking-tight transition-colors duration-240 md:text-3xl lg:text-[2.1rem]',
+                                'group flex min-h-11 items-center gap-4 py-2 font-display text-2xl font-light tracking-tight transition-colors duration-240 md:text-3xl lg:py-1 lg:text-[2.1rem]',
                                 active ? 'text-warm' : 'text-warm/70 hover:text-warm',
                               )}
                             >

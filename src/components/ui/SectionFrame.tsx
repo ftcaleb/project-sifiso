@@ -9,15 +9,21 @@ type Props = {
 };
 
 /**
- * Palantir-style corner "earmarks": uppercase 11px metadata pinned to the four
- * corners of a section, inset below the fixed HUD band so the two never collide.
- * Structure, not decoration.
+ * Palantir-style corner "earmarks": uppercase metadata pinned to the corners of
+ * a section. Structure, not decoration.
+ *
+ * The labels are hidden below the tablet breakpoint. On a phone there is no
+ * margin for them to live in, so they landed on top of the section's own
+ * eyebrow and heading. The corner ticks stay at every width — they carry the
+ * framing without competing for the same space as the content.
  */
 export function SectionFrame({ tl, tr, bl, br, className }: Props) {
-  const c = 'label pointer-events-none absolute text-stone/70';
+  const c = 'label pointer-events-none absolute hidden text-stone/70 md:block';
   const tick = 'pointer-events-none absolute h-3 w-3 border-hairline';
   return (
-    <div aria-hidden className={cn('absolute inset-0', className)}>
+    // pointer-events-none on the wrapper too: this is decorative, and an
+    // inset-0 layer without it swallows taps across the whole section.
+    <div aria-hidden className={cn('pointer-events-none absolute inset-0', className)}>
       {tl && <span className={cn(c, 'left-6 top-[5.5rem] md:left-10 md:top-24')}>{tl}</span>}
       {tr && <span className={cn(c, 'right-6 top-[5.5rem] md:right-10 md:top-24')}>{tr}</span>}
       {bl && <span className={cn(c, 'bottom-[5.5rem] left-6 md:bottom-24 md:left-10')}>{bl}</span>}

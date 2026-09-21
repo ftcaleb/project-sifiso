@@ -12,7 +12,7 @@ export function RoadLines({ variant = 0 }: { variant?: 0 | 1 | 2 }) {
   ][variant];
   return (
     <PathDraw className="relative -my-6 w-full overflow-hidden" start="top 90%" end="bottom 30%" scrub={0.8} stagger={0.12}>
-      <svg viewBox="0 0 1440 220" className="h-40 w-full md:h-56" preserveAspectRatio="none" aria-hidden>
+      <svg viewBox="0 0 1440 220" className="h-24 w-full sm:h-40 md:h-56" preserveAspectRatio="none" aria-hidden>
         <g fill="none" strokeLinecap="round">
           <path d="M-20 180 C 240 180, 360 120, 640 130 S 1040 200, 1470 170" stroke="#2A2D33" strokeWidth="1.2" />
           <path d="M-20 40 C 220 30, 420 90, 700 80 S 1160 20, 1470 50" stroke="#2A2D33" strokeWidth="1.2" />

@@ -11,10 +11,10 @@ const LAYERS = [
 
 export function Architecture() {
   return (
-    <section className="relative border-t border-hairline bg-graphite py-28 md:py-40" data-section="Architecture">
+    <section className="relative border-t border-hairline bg-graphite py-20 md:py-40" data-section="Architecture">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <Eyebrow index="04">Architecture</Eyebrow>
-        <SplitText as="h2" text="Ingest. Model. Govern." className="display mt-6 text-[clamp(2.5rem,6vw,5.5rem)]" />
+        <SplitText as="h2" text="Ingest. Model. Govern." className="display mt-6 text-[clamp(2.1rem,6vw,5.5rem)]" />
 
         <PathDraw className="mt-10 hidden md:block" start="top 90%" end="bottom 60%" scrub={0.6}>
           <svg viewBox="0 0 1200 40" className="h-10 w-full" preserveAspectRatio="none" aria-hidden>

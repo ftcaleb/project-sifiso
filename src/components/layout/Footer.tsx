@@ -19,16 +19,16 @@ export function Footer() {
 
           <div className="md:col-span-2">
             <div className="label mb-5 text-stone">Navigate</div>
-            <ul className="space-y-2.5">
+            <ul className="space-y-0 md:space-y-2.5">
               {NAV.map((n) => (
                 <li key={n.href}>
-                  <Link href={n.href} className="u-line text-sm text-warm/85 hover:text-warm">
+                  <Link href={n.href} className="u-line inline-flex min-h-11 items-center text-sm text-warm/85 hover:text-warm md:min-h-0">
                     {n.label}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/team" className="u-line text-sm text-warm/85 hover:text-warm">
+                <Link href="/team" className="u-line inline-flex min-h-11 items-center text-sm text-warm/85 hover:text-warm md:min-h-0">
                   Team
                 </Link>
               </li>
@@ -51,19 +51,19 @@ export function Footer() {
 
           <div className="md:col-span-2">
             <div className="label mb-5 text-stone">Platform</div>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-0 text-sm md:space-y-2.5">
               <li>
-                <Link href="/meridian" className="u-line text-warm/85 hover:text-warm">
+                <Link href="/meridian" className="u-line inline-flex min-h-11 items-center text-warm/85 hover:text-warm md:min-h-0">
                   MERIDIAN™
                 </Link>
               </li>
               <li>
-                <Link href="/meridian#modules" className="u-line text-warm/85 hover:text-warm">
+                <Link href="/meridian#modules" className="u-line inline-flex min-h-11 items-center text-warm/85 hover:text-warm md:min-h-0">
                   Modules
                 </Link>
               </li>
               <li>
-                <Link href="/meridian#demo" className="u-line text-warm/85 hover:text-warm">
+                <Link href="/meridian#demo" className="u-line inline-flex min-h-11 items-center text-warm/85 hover:text-warm md:min-h-0">
                   Request a demo
                 </Link>
               </li>

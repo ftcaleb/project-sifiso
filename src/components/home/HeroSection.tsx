@@ -35,7 +35,7 @@ export function HeroSection() {
         <SplitText
           as="h1"
           text="The Operating System for Africa’s Built Environment."
-          className="display mt-8 text-[clamp(2.5rem,9vw,8.25rem)] text-warm md:max-w-[15ch]"
+          className="display mt-8 text-[clamp(2.25rem,8.5vw,8.25rem)] text-warm md:max-w-[15ch]"
           immediate
           delay={0.35}
         />

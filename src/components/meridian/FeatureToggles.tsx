@@ -21,11 +21,11 @@ export function FeatureToggles() {
   const current = MODULES.find((m) => m.id === active)!;
 
   return (
-    <section id="modules" className="relative scroll-mt-20 border-t border-hairline bg-graphite py-28 md:py-40" data-section="Modules">
+    <section id="modules" className="relative scroll-mt-20 border-t border-hairline bg-graphite py-20 md:py-40" data-section="Modules">
       <SectionFrame tl="SEC 02" tr="MODULES" />
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <Eyebrow index="02">Modules</Eyebrow>
-        <SplitText as="h2" text="Toggle a module. Watch the data change." className="display mt-6 max-w-4xl text-[clamp(2.5rem,6vw,5.5rem)]" />
+        <SplitText as="h2" text="Toggle a module. Watch the data change." className="display mt-6 max-w-4xl text-[clamp(2.1rem,6vw,5.5rem)]" />
 
         <div className="mt-16 grid gap-10 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4" role="tablist" aria-label="MERIDIAN modules">
@@ -65,7 +65,9 @@ export function FeatureToggles() {
 
           <div className="lg:col-span-8">
             <div className="relative">
-              <div className="pointer-events-none absolute -inset-8 -z-10 bg-[radial-gradient(55%_55%_at_50%_50%,rgba(244,242,237,0.045),transparent)]" />
+              {/* inset-0 on phones: a negative inset here pushed the page wider
+                  than the viewport, which also shifted the fixed HUD off-screen. */}
+              <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(55%_55%_at_50%_50%,rgba(244,242,237,0.045),transparent)] md:-inset-8" />
               <AnimatePresence mode="wait">
                 <motion.div
                   key={active}

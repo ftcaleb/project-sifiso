@@ -57,7 +57,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="relative border-t border-hairline bg-graphite py-28 md:py-40" data-section="Map">
+      <section className="relative border-t border-hairline bg-graphite py-20 md:py-40" data-section="Map">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <div className="grid gap-10 md:grid-cols-12">
             <div className="md:col-span-4">

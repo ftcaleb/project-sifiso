@@ -56,14 +56,14 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <article className="relative bg-graphite pt-40 pb-28 md:pt-52 md:pb-40" data-section={a.category}>
+      <article className="relative bg-graphite pt-32 pb-20 md:pt-52 md:pb-40" data-section={a.category}>
         <SectionFrame tl="INSIGHT" tr={a.category.toUpperCase()} />
         <div className="mx-auto max-w-7xl px-6 md:px-10">
-          <Link href="/insights" className="label u-line text-stone">
+          <Link href="/insights" className="label u-line inline-flex min-h-11 items-center text-stone md:min-h-0">
             ← All insights
           </Link>
           <Eyebrow className="mt-10">{a.category}</Eyebrow>
-          <SplitText as="h1" text={a.title} className="display mt-8 max-w-5xl text-[clamp(2.25rem,6vw,5.25rem)]" immediate />
+          <SplitText as="h1" text={a.title} className="display mt-8 max-w-5xl text-[clamp(1.9rem,6vw,5.25rem)]" immediate />
           <Reveal delay={0.5} className="label mt-8 flex gap-6 text-stone">
             <span className="tnum">{new Date(a.date).toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: '2-digit' })}</span>
             <span>{a.read} read</span>

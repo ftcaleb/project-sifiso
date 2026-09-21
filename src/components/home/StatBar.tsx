@@ -32,7 +32,7 @@ export function StatBar() {
                     LIVE
                   </span>
                 </div>
-                <div className="readout mt-8 whitespace-nowrap text-[clamp(2rem,3vw,3.1rem)] text-warm">
+                <div className="readout mt-8 whitespace-nowrap text-[clamp(1.75rem,3vw,3.1rem)] text-warm">
                   <NumberTicker value={s.value} prefix={s.prefix} suffix={s.suffix} decimals={s.decimals ?? 0} delay={i * 0.12} />
                 </div>
                 <div className="mt-3 text-xs text-stone">{s.note}</div>

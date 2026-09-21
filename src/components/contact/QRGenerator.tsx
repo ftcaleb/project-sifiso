@@ -79,11 +79,11 @@ export function QRGenerator() {
     }
   };
 
-  const chip = 'label border px-3 py-2 transition-colors duration-240';
-  const dl = 'label inline-flex items-center gap-3 border border-hairline px-5 py-3 text-warm transition-colors duration-240 hover:border-stone';
+  const chip = 'label flex min-h-11 items-center border px-3.5 py-2 transition-colors duration-240';
+  const dl = 'label inline-flex min-h-11 items-center gap-3 border border-hairline px-5 py-3 text-warm transition-colors duration-240 hover:border-stone';
 
   return (
-    <section className="relative border-t border-hairline bg-graphite py-28 md:py-36" data-section="QR generator">
+    <section className="relative border-t border-hairline bg-graphite py-20 md:py-36" data-section="QR generator">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-12 md:px-10">
         <div className="md:col-span-5">
           <Eyebrow index="04">QR code</Eyebrow>

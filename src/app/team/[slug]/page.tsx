@@ -30,10 +30,10 @@ export default function PersonPage({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <section className="relative bg-graphite pt-40 pb-28 md:pt-52 md:pb-40" data-section={p.name}>
+      <section className="relative bg-graphite pt-32 pb-20 md:pt-52 md:pb-40" data-section={p.name}>
         <SectionFrame tl={`TEAM · ${String(idx + 1).padStart(2, '0')}/${String(TEAM.length).padStart(2, '0')}`} tr={p.focus.toUpperCase()} />
         <div className="mx-auto max-w-7xl px-6 md:px-10">
-          <Link href="/team" className="label u-line text-stone">
+          <Link href="/team" className="label u-line inline-flex min-h-11 items-center text-stone md:min-h-0">
             ← All people
           </Link>
           <div className="mt-10 grid gap-12 md:grid-cols-12">
@@ -42,7 +42,7 @@ export default function PersonPage({ params }: { params: { slug: string } }) {
             </Reveal>
             <div className="md:col-span-7 md:pl-6">
               <Eyebrow>{p.role}</Eyebrow>
-              <SplitText as="h1" text={p.name} className="display mt-6 text-[clamp(2.75rem,7vw,6rem)]" immediate />
+              <SplitText as="h1" text={p.name} className="display mt-6 text-[clamp(2.15rem,7vw,6rem)]" immediate />
               <Reveal delay={0.5} className="mt-8 space-y-5 text-base leading-relaxed text-warm/85 md:text-lg">
                 {p.bio.map((b) => (
                   <p key={b}>{b}</p>

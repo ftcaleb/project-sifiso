@@ -41,7 +41,7 @@ export function LiveLog() {
   }, []);
 
   return (
-    <section className="relative border-t border-hairline bg-graphite py-28 md:py-36" data-section="Live log">
+    <section className="relative border-t border-hairline bg-graphite py-20 md:py-36" data-section="Live log">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 md:grid-cols-12 md:px-10">
         <div className="md:col-span-4">
           <Eyebrow index="05">Event stream</Eyebrow>
@@ -70,11 +70,13 @@ export function LiveLog() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.38, ease: EASE_CUBIC }}
-                    className="tnum grid grid-cols-[4.5rem_6rem_1fr] gap-3 border-b border-hairline/50 px-2 py-2.5 text-xs"
+                    className="tnum grid grid-cols-[4.5rem_1fr] gap-x-3 gap-y-1 border-b border-hairline/50 px-2 py-2.5 text-xs sm:grid-cols-[4.5rem_6rem_1fr]"
                   >
                     <span className="text-stone">{r.t}</span>
-                    <span className="label text-[0.6rem] text-warm/70">{r.k}</span>
-                    <span className="truncate text-warm/85">{r.v}</span>
+                    <span className="label text-[0.65rem] text-warm/70">{r.k}</span>
+                    {/* the message needs the full width on a phone, so it wraps
+                        to its own row under the time and channel */}
+                    <span className="col-span-2 text-warm/85 sm:col-span-1 sm:truncate">{r.v}</span>
                   </motion.li>
                 ))}
               </AnimatePresence>

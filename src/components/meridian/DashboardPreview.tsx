@@ -47,25 +47,25 @@ export function DashboardPreview({ variant = 'register' }: { variant?: PreviewVa
       <Frame title="Asset register · Infrastructure" meta="186,204 components">
         <div className="grid gap-5 md:grid-cols-5">
           <div className="md:col-span-3">
-            <div className="label grid grid-cols-[1.4fr_2fr_1fr_1fr_0.6fr_1fr] gap-2 border-b border-hairline pb-2 text-[0.6rem] text-stone">
+            <div className="label grid grid-cols-[1.3fr_2fr_1fr] sm:grid-cols-[1.4fr_2fr_1fr_1fr_0.6fr_1fr] gap-2 border-b border-hairline pb-2 text-[0.65rem] text-stone sm:text-[0.6rem]">
               <span>ID</span>
               <span>Component</span>
-              <span>Zone</span>
-              <span>Extent</span>
-              <span>Cond.</span>
+              <span className="hidden sm:block">Zone</span>
+              <span className="hidden sm:block">Extent</span>
+              <span className="hidden sm:block">Cond.</span>
               <span className="text-right">CRC</span>
             </div>
             {REGISTER_ROWS.map((r, i) => (
               <motion.div
                 key={r[0]}
                 {...rowAnim(i)}
-                className="tnum grid grid-cols-[1.4fr_2fr_1fr_1fr_0.6fr_1fr] gap-2 border-b border-hairline/60 py-2 text-[0.68rem] text-warm/85"
+                className="tnum grid grid-cols-[1.3fr_2fr_1fr] sm:grid-cols-[1.4fr_2fr_1fr_1fr_0.6fr_1fr] gap-2 border-b border-hairline/60 py-2 text-[0.72rem] text-warm/85 sm:text-[0.68rem]"
               >
                 <span className="whitespace-nowrap text-stone">{r[0]}</span>
                 <span className="truncate">{r[1]}</span>
-                <span className="whitespace-nowrap">{r[2]}</span>
-                <span className="whitespace-nowrap">{r[3]}</span>
-                <span>{r[4]}</span>
+                <span className="hidden whitespace-nowrap sm:block">{r[2]}</span>
+                <span className="hidden whitespace-nowrap sm:block">{r[3]}</span>
+                <span className="hidden sm:block">{r[4]}</span>
                 <span className="whitespace-nowrap text-right">{r[5]}</span>
               </motion.div>
             ))}

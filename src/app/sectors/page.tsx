@@ -43,7 +43,7 @@ export default function SectorsPage() {
         </div>
       </section>
 
-      <section className="relative border-t border-hairline bg-graphite py-28 md:py-40" data-section="Track record">
+      <section className="relative border-t border-hairline bg-graphite py-20 md:py-40" data-section="Track record">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <div className="grid gap-12 md:grid-cols-12">
             <div className="md:col-span-4">
@@ -57,7 +57,8 @@ export default function SectorsPage() {
               </Reveal>
             </div>
             <div className="md:col-span-8">
-              <div className="label grid grid-cols-[1.2fr_2fr_1fr_1fr] gap-4 pb-3 text-stone">
+              {/* Column headings only make sense once the row is actually a row. */}
+              <div className="label hidden grid-cols-[1.2fr_2fr_1fr_1fr] gap-4 pb-3 text-stone md:grid">
                 <span>Client</span>
                 <span>Scope</span>
                 <span className="text-right">Scale</span>
@@ -67,14 +68,22 @@ export default function SectorsPage() {
                 {TRACK_RECORD.map((r, i) => (
                   <li key={r.scope}>
                     <DrawLine delay={i * 0.05} />
-                    <Reveal delay={0.05 + i * 0.05} y={10} className="grid grid-cols-[1.2fr_2fr_1fr_1fr] gap-4 py-5 text-sm">
+                    <Reveal
+                      delay={0.05 + i * 0.05}
+                      y={10}
+                      className="grid grid-cols-1 gap-1.5 py-5 text-sm md:grid-cols-[1.2fr_2fr_1fr_1fr] md:items-baseline md:gap-4"
+                    >
                       <span className="text-warm/90">{r.client}</span>
                       <span className="text-stone">{r.scope}</span>
-                      <span className="text-right">
-                        <span className="readout text-xl text-warm">{r.metric}</span>
-                        <span className="label ml-1.5 text-stone">{r.unit}</span>
+                      {/* stacked: scale and outcome sit on one line under the scope */}
+                      <span className="mt-1 flex items-baseline justify-between gap-4 md:mt-0 md:block md:text-right">
+                        <span>
+                          <span className="readout text-xl text-warm">{r.metric}</span>
+                          <span className="label ml-1.5 text-stone">{r.unit}</span>
+                        </span>
+                        <span className="label text-warm/80 md:hidden">{r.value}</span>
                       </span>
-                      <span className="label text-right text-warm/80">{r.value}</span>
+                      <span className="label hidden text-right text-warm/80 md:block">{r.value}</span>
                     </Reveal>
                   </li>
                 ))}
