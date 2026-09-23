@@ -17,6 +17,7 @@ type State = 'idle' | 'offered' | 'sending' | 'sent';
 export function DocumentDownload({ service }: { service: Service }) {
   const [state, setState] = useState<State>('idle');
   const [error, setError] = useState('');
+  const [emailed, setEmailed] = useState(true);
   const emailRef = useRef<HTMLInputElement>(null);
 
   const href = `/documents/${service.doc.file}`;
@@ -34,7 +35,11 @@ export function DocumentDownload({ service }: { service: Service }) {
     setState('sending');
     const fd = new FormData(e.currentTarget);
     try {
-      await postJson('/api/document', { ...Object.fromEntries(fd.entries()), serviceId: service.id });
+      const res = await postJson<{ ok: boolean; emailed?: boolean }>('/api/document', {
+        ...Object.fromEntries(fd.entries()),
+        serviceId: service.id,
+      });
+      setEmailed(res.emailed !== false);
       setState('sent');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not send the email.');
@@ -86,10 +91,12 @@ export function DocumentDownload({ service }: { service: Service }) {
                 <div>
                   <div className="label flex items-center gap-2 text-stone">
                     <span className="h-1.5 w-1.5 rounded-full bg-warm" />
-                    Sent
+                    {emailed ? 'Sent' : 'Received'}
                   </div>
                   <p className="mt-3 max-w-xl text-sm leading-relaxed text-warm/85">
-                    All four capability statements are on their way to your inbox, each with its own download link.
+                    {emailed
+                      ? 'All four capability statements are on their way to your inbox, each with its own download link.'
+                      : 'Thank you — we have your details and will send the full set through shortly.'}
                   </p>
                 </div>
               ) : (

@@ -1,9 +1,12 @@
+import nodemailer, { type Transporter } from 'nodemailer';
+
 /**
- * Email templates and delivery via Resend's HTTP API.
+ * Email over SMTP with Nodemailer, running on Vercel's Node runtime.
  *
- * No SMTP sockets, so this runs on Cloudflare Workers. The API key is passed in
- * rather than read from process.env, because a Pages Function receives its
- * secrets on the request context (ctx.env), not as a Node global.
+ * Chosen over an HTTP email API because SMTP delivers to any recipient with no
+ * verified sending domain. Domain-based providers refuse every address except
+ * the account owner until DNS is set up, which made it impossible to send a
+ * prospect their documents before the client's domain exists.
  */
 
 export type Enquiry = {
@@ -15,19 +18,33 @@ export type Enquiry = {
   message: string;
 };
 
-type Mail = { from: string; to: string; replyTo?: string; subject: string; html: string; text: string };
+type Mail = { to: string; replyTo?: string; subject: string; html: string; text: string };
 
-export async function sendEmail(apiKey: string, m: Mail) {
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: m.from, to: [m.to], reply_to: m.replyTo, subject: m.subject, html: m.html, text: m.text }),
+function env(name: string, fallback?: string) {
+  const v = process.env[name] ?? fallback;
+  if (v === undefined) throw new Error(`Missing environment variable ${name}`);
+  return v;
+}
+
+let cached: Transporter | null = null;
+
+function transport() {
+  if (cached) return cached;
+  const port = Number(env('SMTP_PORT', '465'));
+  cached = nodemailer.createTransport({
+    host: env('SMTP_HOST'),
+    port,
+    secure: port === 465,
+    auth: { user: env('SMTP_USER'), pass: env('SMTP_PASS') },
   });
-  if (!res.ok) {
-    const detail = await res.text().catch(() => '');
-    throw new Error(`Resend ${res.status}: ${detail.slice(0, 300)}`);
-  }
-  return (await res.json()) as { id: string };
+  return cached;
+}
+
+export async function sendEmail(m: Mail) {
+  const from = process.env.MAIL_FROM ?? env('SMTP_USER');
+  const info = await transport().sendMail({ from, ...m });
+  if (info.rejected?.length) throw new Error(`SMTP rejected: ${info.rejected.join(', ')}`);
+  return info;
 }
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
