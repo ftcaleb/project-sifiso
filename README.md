@@ -1,7 +1,11 @@
 # Sifiso Holdings — website
 
 "The Operating System for Africa's Built Environment."
-Next.js 14 (App Router) · TypeScript · Tailwind CSS · Framer Motion · GSAP ScrollTrigger · Lenis · react-three-fiber · Spline.
+Next.js 14 (App Router) · TypeScript · Tailwind CSS · Framer Motion · GSAP ScrollTrigger · Lenis · react-three-fiber · Spline · Nodemailer, on Vercel.
+
+**Live: https://sifiso-holding.vercel.app**
+
+This repo is connected to the Vercel project: pushing to `main` deploys to production, and any other branch gets a preview URL. `npx vercel deploy --prod` still works for deploying without committing.
 
 Phase 0 research lives in [`research/investigation.md`](research/investigation.md). Read it before touching the design system: it documents what was observed on bentley.com, palantir.com, arup.com, sbp.de, esri.com, nvidia.com/omniverse, 21st.dev and spline.design, and how each finding was cross-checked against the brief.
 
@@ -9,13 +13,12 @@ Phase 0 research lives in [`research/investigation.md`](research/investigation.m
 
 ```bash
 npm install
-npm run dev -- -p 3105   # Next dev server (port 3000 is often taken)
-npm run preview          # static build + Cloudflare Pages runtime, incl. /api/contact
-npm run deploy           # build and publish to Cloudflare Pages
+npm run dev -- -p 3010   # http://localhost:3010
+npm run build && npm start
 npm run typecheck
 ```
 
-`npm run dev` does not run the enquiry form: that lives in a Cloudflare Pages Function, so use `npm run preview` (http://localhost:8788) to exercise it locally. Local Function secrets go in `.dev.vars`, which is git-ignored.
+The form endpoints need SMTP credentials: copy `.env.example` to `.env.local` and fill them in. They run under `next dev` as well as in production.
 
 ## Routes
 
@@ -52,30 +55,27 @@ No local assets. All photos are Unsplash (free commercial use) referenced in `sr
 
 ## Hosting
 
-The site is a **static export** (`output: 'export'`) served from Cloudflare Pages, plus one Pages Function for the enquiry form. Nothing needs a Node server, so hosting is on Cloudflare's free tier.
+Deployed to **Vercel**. Every page is prerendered at build time; `/api/contact` and `/api/document` run as Node serverless functions, because Nodemailer opens an SMTP socket.
 
-- `out/` — the built site, published with `wrangler pages deploy`.
-- `functions/` — the only server-side code. Cloudflare routes by file path: `contact.ts` handles the enquiry form, `document.ts` emails the capability statements.
-
-
-> **Testing the forms locally.** `next dev` does not run the Cloudflare Pages Functions in `/functions`, so `POST /api/*` falls through to Next's 404 HTML page. Use `npm run preview` (http://localhost:8788) for anything that submits a form. The client helper in `src/lib/post-json.ts` detects the HTML response and shows a readable message instead of a JSON parse error.
+`vercel.json` pins `framework: nextjs`. Without it Vercel serves the project as a bare static site: every page 404s while files in `public/` still resolve.
 
 ## Contact form email
 
-`ContactForm.tsx` posts to `/api/contact`, handled by the Pages Function, which sends two emails through **Resend's HTTP API** (not SMTP — Cloudflare Workers cannot open SMTP sockets): an internal notification to `MAIL_TO` with reply-to set to the enquirer, and an auto-reply to the enquirer. Templates live in `src/lib/mail.ts`. If the auto-reply fails the enquiry still succeeds, since the notification is what matters.
+`ContactForm.tsx` posts to `/api/contact` and `DocumentDownload.tsx` to `/api/document`. Both send through **Nodemailer over SMTP**; templates live in `src/lib/mail.ts`.
+
+Each route sends the internal notification **first** and treats the visitor's copy as best-effort, so a failed auto-reply can never cost you the lead.
 
 Protection: hidden honeypot field (bots get a fake success), server-side validation, and a rate limit of 5 submissions per IP per 10 minutes.
 
-Environment variables, set in the Cloudflare Pages project (and in `.dev.vars` locally):
+Environment variables, set in the Vercel project (and in `.env.local` locally):
 
 | Variable | Notes |
 |---|---|
-| `RESEND_API_KEY` | Secret. From resend.com. |
-| `MAIL_FROM` | Must be `onboarding@resend.dev` until a domain is verified in Resend. |
+| `SMTP_HOST` / `SMTP_PORT` | `smtp.gmail.com` / `465`. |
+| `SMTP_USER` / `SMTP_PASS` | Gmail address and an **App Password** (2FA must be on). |
+| `MAIL_FROM` | Display name and address that mail is sent from. |
 | `MAIL_TO` | Where enquiries land. |
 | `MAIL_REPLY_TO` | Reply-to on the auto-reply. |
-
-Before launch, verify the client's domain in Resend and change `MAIL_FROM` to an address on it. Until then Resend only delivers to the account owner's own address.
 
 ## QR codes
 
@@ -83,7 +83,13 @@ The contact page has a browser-side generator (`QRGenerator.tsx`, using the `qrc
 
 ## Capability statements
 
-Each service pillar offers a one-page PDF from `public/documents/`. The download is not gated: clicking starts it immediately, then a panel offers to email all four. `functions/api/document.ts` sends the visitor one email covering every pillar with a download link each, and notifies `MAIL_TO` who took what. Link URLs are built from the request origin, so they follow the site onto a custom domain.
+Each service pillar offers a one-page PDF from `public/documents/`. The download is not gated: clicking starts it immediately, then a panel offers to email all four. `src/app/api/document/route.ts` sends the visitor one email covering every pillar with a download link each, and notifies `MAIL_TO` who took what. Link URLs are built from the request origin, so they follow the site onto a custom domain.
+
+### Why SMTP rather than an email API
+
+Domain-based providers such as Resend refuse every recipient except the account owner until a sending domain is verified in DNS. That makes it impossible to send a prospect their documents before the client's domain exists. Gmail SMTP delivers to any recipient with just an app password.
+
+At launch, move to a mailbox on the client’s own domain by changing `SMTP_*` and `MAIL_FROM`. No code change.
 
 ## Not wired
 
@@ -95,6 +101,5 @@ Each service pillar offers a one-page PDF from `public/documents/`. The download
 - **Shimmer button.** `container-type: size` lives on the spark layer (absolutely positioned, so it has a definite size), not on the button; on the button it collapses the button's width.
 - **Corner earmarks.** `SectionFrame` insets its labels below the fixed HUD band so section metadata never collides with the wordmark or nav.
 - **Spline package.** `@splinetool/react-spline` 3.x/4.x publish ESM-only export maps that Next 14's server resolver rejects; 2.2.6 (CJS + ESM) is pinned.
-- **Static export constraints.** Next's image optimiser and runtime `ImageResponse` do not exist on a static host, so `images.unoptimized` is on and the social card and Apple icon are pre-rendered PNGs in `src/app/` rather than generated per request.
-- **Why not OpenNext/Workers.** `@opennextjs/cloudflare` needs Next ≥ 15.5, and that upgrade chain (React 19 → `@react-three/fiber` 9) breaks peer resolution on this tree. Static export avoids the upgrade entirely and every page here is prerendered anyway.
-- **Verification.** Every route was built and screenshotted at 1440×900 and 400×860 with Playwright over Edge, including scrolled sections; the Cloudflare build was then re-verified end to end through `wrangler pages dev`.
+- **Pre-rendered social card.** The social card and Apple icon are static PNGs in `src/app/` rather than generated per request, and `images.unoptimized` is on because the Unsplash URLs are already sized.
+- **Verification.** Every route was built and screenshotted at 1440×900 and 400×860 with Playwright over Edge, including scrolled sections; and both mail routes were verified against the live deployment by sending to a recipient other than the sending account.

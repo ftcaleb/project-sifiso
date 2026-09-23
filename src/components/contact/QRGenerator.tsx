@@ -37,7 +37,7 @@ function slug(s: string) {
  * so it follows the site when it moves to a custom domain.
  */
 export function QRGenerator() {
-  const [origin, setOrigin] = useState('https://sifiso-holdings-enh.pages.dev');
+  const [origin, setOrigin] = useState('https://sifiso-holding.vercel.app');
   const [key, setKey] = useState('home');
   const [custom, setCustom] = useState('');
   const [png, setPng] = useState('');
