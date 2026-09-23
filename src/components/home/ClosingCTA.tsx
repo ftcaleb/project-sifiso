@@ -10,16 +10,19 @@ export function ClosingCTA({
   text = 'A conversation with our practice leads is the fastest way to find out what your register, roll or framework is missing.',
   cta = 'Start a conversation',
   href = '/contact',
+  index = '05',
 }: {
   title?: string;
   text?: string;
   cta?: string;
   href?: string;
+  /** Corner earmark. Each page has a different number of sections before this one. */
+  index?: string;
 }) {
   return (
     <section id="contact" className="light relative overflow-hidden py-24 md:py-48" data-section="Contact">
       <div className="blueprint-grid absolute inset-0 [mask-image:radial-gradient(50%_70%_at_50%_100%,#000,transparent)]" />
-      <SectionFrame tl="SEC 05" tr="CONTACT" bl="JHB · CPT · DBN" br="RESPONSE < 24H" className="[&_span]:text-charcoal/50 [&_span.border-hairline]:border-charcoal/20" />
+      <SectionFrame tl={`SEC ${index}`} tr="CONTACT" bl="JHB · CPT · DBN" br="RESPONSE < 24H" className="[&_span]:text-charcoal/50 [&_span.border-hairline]:border-charcoal/20" />
       <div className="relative mx-auto max-w-7xl px-6 text-center md:px-10">
         <Eyebrow className="justify-center text-charcoal/60" lineClassName="bg-charcoal/40">
           Next step

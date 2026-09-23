@@ -8,7 +8,7 @@ export function Clients() {
     <section className="relative bg-graphite py-20 md:py-32" data-section="Clients">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <Eyebrow index="04">Trusted across the built environment</Eyebrow>
+          <Eyebrow index="02">Trusted across the built environment</Eyebrow>
           <Reveal className="label text-stone" delay={0.2}>
             11 municipalities · 3 provincial departments · 4 lenders · 2 utilities
           </Reveal>
