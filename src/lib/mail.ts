@@ -96,39 +96,40 @@ export function autoReplyMail(e: Enquiry, ref: string) {
   };
 }
 
-export type DocLink = { index: string; title: string; blurb: string; url: string; requested: boolean };
+export type DocLink = { index: string; title: string; blurb: string; url: string };
 
 /**
- * Sent to whoever downloads a capability statement: one line per pillar with a
- * download link. Links rather than attachments, so the email stays light and
- * the files are always the current ones on the site.
+ * Sent to whoever downloads a capability statement: the one they asked for,
+ * with a download link. A link rather than an attachment, so the email stays
+ * light and always points at the current file on the site.
  */
-export function documentsMail(name: string, docs: DocLink[]) {
-  const first = name.trim().split(' ')[0] || 'there';
-  const asked = docs.find((d) => d.requested);
-
-  const rows = docs
-    .map(
-      (d) => `<tr><td style="padding:14px 0;border-bottom:1px solid #2A2D33">
-<div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8A8D93">${d.index}${d.requested ? ' · Just downloaded' : ''}</div>
-<div style="font-size:17px;margin-top:6px">${esc(d.title)}</div>
-<div style="font-size:14px;line-height:1.55;color:#8A8D93;margin-top:6px">${esc(d.blurb)}</div>
-<div style="margin-top:10px"><a href="${d.url}" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#EDEBE4;border-bottom:1px solid #1D4E89;padding-bottom:2px;text-decoration:none">Download PDF</a></div>
-</td></tr>`,
-    )
-    .join('');
+export function documentMail(name: string, doc: DocLink) {
+  const first = name.trim().split(" ")[0] || "there";
 
   const body = `<p>Hello ${esc(first)},</p>
-<p>${asked ? `Here is <strong>${esc(asked.title)}</strong>, along with the rest of the set.` : 'Here are our capability statements.'} One per practice area, a page each.</p>
-<table style="border-collapse:collapse;width:100%;margin-top:8px">${rows}</table>
-<p style="margin-top:22px">If any of these is close to something you are working on, reply to this email and we will set up a conversation with the practice lead.</p>
+<p>Here is the capability statement you asked for.</p>
+<table style="border-collapse:collapse;width:100%;margin-top:8px"><tr><td style="padding:14px 0;border-top:1px solid #2A2D33;border-bottom:1px solid #2A2D33">
+<div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8A8D93">${doc.index}</div>
+<div style="font-size:19px;margin-top:6px">${esc(doc.title)}</div>
+<div style="font-size:14px;line-height:1.55;color:#8A8D93;margin-top:8px">${esc(doc.blurb)}</div>
+<div style="margin-top:14px"><a href="${doc.url}" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#EDEBE4;border-bottom:1px solid #1D4E89;padding-bottom:2px;text-decoration:none">Download PDF</a></div>
+</td></tr></table>
+<p style="margin-top:22px">If this is close to something you are working on, reply to this email and we will set up a conversation with the practice lead.</p>
 <p>— Sifiso Holdings</p>`;
 
-  const text = `Hello ${first},\n\n${asked ? `Here is ${asked.title}, along with the rest of the set.` : 'Here are our capability statements.'} One per practice area, a page each.\n\n${docs
-    .map((d) => `${d.index} ${d.title}${d.requested ? ' (just downloaded)' : ''}\n${d.blurb}\n${d.url}`)
-    .join('\n\n')}\n\nIf any of these is close to something you are working on, reply to this email and we will set up a conversation with the practice lead.\n\n— Sifiso Holdings`;
+  const text = `Hello ${first},
 
-  return { subject: 'Your Sifiso Holdings capability statements', html: shell('Capability statements.', body), text };
+Here is the capability statement you asked for.
+
+${doc.index} ${doc.title}
+${doc.blurb}
+${doc.url}
+
+If this is close to something you are working on, reply to this email and we will set up a conversation with the practice lead.
+
+— Sifiso Holdings`;
+
+  return { subject: `${doc.title} — Sifiso Holdings`, html: shell("Your capability statement.", body), text };
 }
 
 /** Internal notification that someone took a document. */

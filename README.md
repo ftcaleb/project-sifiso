@@ -24,7 +24,7 @@ The form endpoints need SMTP credentials: copy `.env.example` to `.env.local` an
 
 | Route | Content |
 |---|---|
-| `/` | Cinematic 3D hero, four service pillars (glass cards), live stat ticker, MERIDIAN™ teaser, client-type marquee, closing CTA |
+| `/` | Cinematic 3D hero, four service pillars (glass cards), client-type marquee, closing CTA |
 | `/about` | Story, values, timeline (scroll-drawn line), leadership |
 | `/services` | Four anchored pillars (`#asset-management`, `#spatial-planning`, `#valuations`, `#data-analytics`) with scroll-drawn infrastructure lines between them |
 | `/meridian` | Product page: scroll-ticking readouts, module toggles with simulated dashboards, spatial overlay that draws itself, architecture, live event stream, demo CTA |
@@ -83,7 +83,7 @@ The contact page has a browser-side generator (`QRGenerator.tsx`, using the `qrc
 
 ## Capability statements
 
-Each service pillar offers a one-page PDF from `public/documents/`. The download is not gated: clicking starts it immediately, then a panel offers to email all four. `src/app/api/document/route.ts` sends the visitor one email covering every pillar with a download link each, and notifies `MAIL_TO` who took what. Link URLs are built from the request origin, so they follow the site onto a custom domain.
+Each service pillar offers a one-page PDF from `public/documents/`. The download is not gated: clicking starts it immediately, then a panel offers to email that statement. `src/app/api/document/route.ts` emails the visitor the statement they asked for with a download link, and notifies `MAIL_TO` who took what. Link URLs are built from the request origin, so they follow the site onto a custom domain.
 
 ### Why SMTP rather than an email API
 
@@ -99,7 +99,7 @@ At launch, move to a mailbox on the client’s own domain by changing `SMTP_*` a
 
 - **Kinetic type observer.** `SplitText` puts the `whileInView` observer on the unclipped heading and propagates variants to the words. Observing each word directly is unreliable: IntersectionObserver clips by `overflow: hidden` ancestors, and a word translated 110% out of its wrapper has zero intersection area, so it never animates.
 - **Shimmer button.** `container-type: size` lives on the spark layer (absolutely positioned, so it has a definite size), not on the button; on the button it collapses the button's width.
-- **Corner earmarks.** `SectionFrame` insets its labels below the fixed HUD band so section metadata never collides with the wordmark or nav.
+- **Corner earmarks.** `SectionFrame` hides its labels below the tablet breakpoint. On a phone there is no margin for them and they printed through the section heading. The corner ticks stay at every width.
 - **Spline package.** `@splinetool/react-spline` 3.x/4.x publish ESM-only export maps that Next 14's server resolver rejects; 2.2.6 (CJS + ESM) is pinned.
 - **Pre-rendered social card.** The social card and Apple icon are static PNGs in `src/app/` rather than generated per request, and `images.unoptimized` is on because the Unsplash URLs are already sized.
 - **Verification.** Every route was built and screenshotted at 1440×900 and 400×860 with Playwright over Edge, including scrolled sections; and both mail routes were verified against the live deployment by sending to a recipient other than the sending account.

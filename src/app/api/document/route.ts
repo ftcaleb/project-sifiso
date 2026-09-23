@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { SERVICES } from '@/lib/data';
-import { documentLeadMail, documentsMail, sendEmail, type DocLink } from '@/lib/mail';
+import { documentLeadMail, documentMail, sendEmail, type DocLink } from '@/lib/mail';
 import { clean, clientIp, EMAIL_RE, rateLimited } from '@/lib/rate-limit';
 
 // Node runtime: Nodemailer opens an SMTP socket, which the edge runtime cannot.
@@ -38,16 +38,15 @@ export async function POST(req: Request) {
   if (!to) return NextResponse.json({ ok: false, error: 'Document delivery is not configured yet.' }, { status: 500 });
   const replyTo = process.env.MAIL_REPLY_TO ?? to;
 
-  // Build download links from the request origin, so they follow the site onto
-  // a custom domain without a config change.
+  // Build the download link from the request origin, so it follows the site
+  // onto a custom domain without a config change.
   const origin = process.env.SITE_URL?.replace(/\/$/, '') ?? new URL(req.url).origin;
-  const docs: DocLink[] = SERVICES.map((s) => ({
-    index: s.index,
-    title: s.title,
-    blurb: s.doc.blurb,
-    url: `${origin}/documents/${s.doc.file}`,
-    requested: s.id === requested.id,
-  }));
+  const doc: DocLink = {
+    index: requested.index,
+    title: requested.title,
+    blurb: requested.doc.blurb,
+    url: `${origin}/documents/${requested.doc.file}`,
+  };
 
   // The lead notification goes first: it is the part of this request with real
   // business value, and it must not be lost because the visitor's copy failed.
@@ -63,7 +62,7 @@ export async function POST(req: Request) {
 
   let emailed = true;
   try {
-    await sendEmail({ to: email, replyTo, ...documentsMail(name, docs) });
+    await sendEmail({ to: email, replyTo, ...documentMail(name, doc) });
   } catch (err) {
     emailed = false;
     console.warn('[document] visitor copy failed', err);

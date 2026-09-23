@@ -11,8 +11,8 @@ type State = 'idle' | 'offered' | 'sending' | 'sent';
 
 /**
  * Capability statement download. The PDF downloads immediately on click — no
- * gate — and a panel then offers to email the full set of four. The email is
- * sent by the /api/document Pages Function.
+ * gate — and a panel then offers to email that same statement. The email is
+ * sent by the /api/document route.
  */
 export function DocumentDownload({ service }: { service: Service }) {
   const [state, setState] = useState<State>('idle');
@@ -95,16 +95,15 @@ export function DocumentDownload({ service }: { service: Service }) {
                   </div>
                   <p className="mt-3 max-w-xl text-sm leading-relaxed text-warm/85">
                     {emailed
-                      ? 'All four capability statements are on their way to your inbox, each with its own download link.'
-                      : 'Thank you — we have your details and will send the full set through shortly.'}
+                      ? `${service.title} is on its way to your inbox, with a download link.`
+                      : 'Thank you — we have your details and will send it through shortly.'}
                   </p>
                 </div>
               ) : (
                 <form onSubmit={onSubmit} className="grid gap-5 sm:grid-cols-2" noValidate>
                   <div className="sm:col-span-2">
                     <p className="text-sm leading-relaxed text-stone">
-                      Your download has started. Want the other three as well? We will email all four, one per practice
-                      area.
+                      Your download has started. Want a copy in your inbox as well? We will email this statement to you.
                     </p>
                   </div>
 
@@ -144,10 +143,10 @@ export function DocumentDownload({ service }: { service: Service }) {
 
                   <div className="flex flex-wrap items-center justify-between gap-5 sm:col-span-2">
                     <span className="label text-stone/70">
-                      {error ? <span className="text-warm">{error}</span> : 'POPIA · we only use this to send the documents'}
+                      {error ? <span className="text-warm">{error}</span> : 'POPIA · we only use this to send the document'}
                     </span>
                     <Button type="submit" variant="primary" magnetic={false}>
-                      {state === 'sending' ? 'Sending' : 'Email me all four'}
+                      {state === 'sending' ? 'Sending' : 'Email it to me'}
                     </Button>
                   </div>
                 </form>
